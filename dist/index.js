@@ -5497,6 +5497,14 @@ var LiteralTransformer = function (_AbstractNodeTransfor) {
                     content = this.obfuscationReplacerFactory(ObfuscationReplacers_1.ObfuscationReplacers.NumberLiteralReplacer).replace(literalNode.value);
                     break;
                 case 'string':
+                    if (Node_1.Node.isCallExpressionNode(parentNode)) {
+                        var callee = parentNode.callee;
+                        if (Node_1.Node.isIdentifierNode(callee)) {
+                            if (callee.name === 'require') {
+                                return literalNode;
+                            }
+                        }
+                    }
                     content = this.obfuscationReplacerFactory(ObfuscationReplacers_1.ObfuscationReplacers.StringLiteralReplacer).replace(literalNode.value);
                     break;
                 default:

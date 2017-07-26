@@ -73,6 +73,16 @@ export class LiteralTransformer extends AbstractNodeTransformer {
                 break;
 
             case 'string':
+                if (Node.isCallExpressionNode(parentNode)) {
+                  const callee: ESTree.Node = parentNode.callee;
+
+                  if (Node.isIdentifierNode(callee)) {
+                    if (callee.name === 'require') { // for compatibility with React Native, preserve require statements
+                      return literalNode;
+                    }
+                  }
+                }
+
                 content = this.obfuscationReplacerFactory(ObfuscationReplacers.StringLiteralReplacer)
                     .replace(<string>literalNode.value);
 
